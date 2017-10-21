@@ -22,11 +22,58 @@ app.get('/', (req, res) => {
 });
 
 app.get('/webhook', function(req, res) {
-  if (req.query['hub.verify_token'] === 'anh_hoang_dep_trai_vo_doi') {
+  if (req.query['hub.verify_token'] === '1412286') {
     res.send(req.query['hub.challenge']);
   }
   res.send('Error, wrong validation token');
 });
+
+// Đây là đoạn code để tạo Webhook
+app.get('/webhook', function(req, res) {
+  if (req.query['hub.verify_token'] === 'ma_xac_minh_cua_ban') {
+    res.send(req.query['hub.challenge']);
+  }
+  res.send('Error, wrong validation token');
+});
+
+// Xử lý khi có người nhắn tin cho bot
+app.post('/webhook', function(req, res) {
+  var entries = req.body.entry;
+  for (var entry of entries) {
+    var messaging = entry.messaging;
+    for (var message of messaging) {
+      var senderId = message.sender.id;
+      if (message.message) {
+        // If user send text
+        if (message.message.text) {
+          var text = message.message.text;
+          console.log(text); // In tin nhắn người dùng
+          sendMessage(senderId, "Tui là bot đây: " + text);
+        }
+      }
+    }
+  }
+
+  res.status(200).send("OK");
+});
+
+function sendMessage(senderId, message) {
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {
+      access_token: "EAAJZBqRhbaYEBALriyaDAy8FR8cMXZAxvZA2j6EM9FsvUnTY34y8SfOuj35dtd2MKDnhneSTG0OHhErATNLl0XkyyQiLIC9SUFZByBuawBV4eW2ZBZC5eEWVCYP7OWxYN0ZBfpEuML5uhYJCXGsnZAdJFneifjkMq89I6GSgcfKV88eFgXoy0Mm5",
+    },
+    method: 'POST',
+    json: {
+      recipient: {
+        id: senderId
+      },
+      message: {
+        text: message
+      },
+    }
+  });
+}
 
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3002);
 app.set('ip', process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1");
