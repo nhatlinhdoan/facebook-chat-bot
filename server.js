@@ -58,6 +58,8 @@ app.post('/webhook', function(req, res) {
           text = message.message.text;
           console.log(text); // In tin nhắn người dùng
           sendMessage(senderId, "Tui là bot đây: " + text);
+          sendMessage(senderId, lat.toString());
+          sendMessage(senderId, lng.toString());
         }
       }
     }
@@ -87,7 +89,7 @@ function sendMessage(senderId, message) {
 
 
 googleMapsClient.geocode({
-  address: '1600 Amphitheatre Parkway, Mountain View, CA'
+  address: text
 }, function(err, response) {
   if (!err) {
     lat = response.json.results[0].geometry.location.lat;
