@@ -17,6 +17,15 @@ app.use(bodyParser.urlencoded({
 var server = http.createServer(app);
 
 
+var googleMapsClient = require('@google/maps').createClient({
+  key: 'AIzaSyATW4Bjvh2dLhDXiYwHqf-N_qWmv6pNB5o'
+});
+
+
+var text;
+var lat, lng;
+
+
 app.get('/', (req, res) => {
   res.send("Home page. Server running okay.");
 });
@@ -46,7 +55,7 @@ app.post('/webhook', function(req, res) {
       if (message.message) {
         // If user send text
         if (message.message.text) {
-          var text = message.message.text;
+          text = message.message.text;
           console.log(text); // In tin nhắn người dùng
           sendMessage(senderId, "Tui là bot đây: " + text);
         }
@@ -57,11 +66,12 @@ app.post('/webhook', function(req, res) {
   res.status(200).send("OK");
 });
 
+
 function sendMessage(senderId, message) {
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {
-      access_token: "EAAJZBqRhbaYEBALriyaDAy8FR8cMXZAxvZA2j6EM9FsvUnTY34y8SfOuj35dtd2MKDnhneSTG0OHhErATNLl0XkyyQiLIC9SUFZByBuawBV4eW2ZBZC5eEWVCYP7OWxYN0ZBfpEuML5uhYJCXGsnZAdJFneifjkMq89I6GSgcfKV88eFgXoy0Mm5",
+      access_token: "EAAJZBqRhbaYEBAAJTAwiWhoSY3STRhsjHTloYPALvvKOo5NJooR8uzrvEotHZBtU8TQJMYHsKcrka5Tvy1m3w7Ar5wXs99wBZAYLEE0oIZAcBS8VuYPjk6inphI4ZCIoyQL2ViFJzLzZCwgi8hLZAMQNEySHn58VjmG0mN1h6NxzyepQANnZA85i",
     },
     method: 'POST',
     json: {
@@ -75,9 +85,22 @@ function sendMessage(senderId, message) {
   });
 }
 
+
+googleMapsClient.geocode({
+  address: '1600 Amphitheatre Parkway, Mountain View, CA'
+}, function(err, response) {
+  if (!err) {
+    lat = response.json.results[0].geometry.location.lat;
+    lng = response.json.results[0].geometry.location.lng;
+    console.log(lat);
+    console.log(lng);
+  }
+});
+
+
 app.set('port', process.env.PORT || 5000);
 //app.set('ip', process.env.IP || "127.0.0.1");
 
 server.listen(app.get('port'), function() {
-  console.log("Chat bot server listening at %s:%d ", app.get('port'));
+  console.log("Chat bot server listening at %s ", app.get('port'));
 });

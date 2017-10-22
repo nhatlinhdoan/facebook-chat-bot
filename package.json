@@ -9,6 +9,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@google/maps": "^0.4.5",
     "body-parser": "^1.15.1",
     "express": "~3.2.4",
     "heroku": "^0.2.0",
