@@ -30,7 +30,7 @@ app.get('/webhook', function(req, res) {
 
 // Đây là đoạn code để tạo Webhook
 app.get('/webhook', function(req, res) {
-  if (req.query['hub.verify_token'] === 'ma_xac_minh_cua_ban') {
+  if (req.query['hub.verify_token'] === '1412286') {
     res.send(req.query['hub.challenge']);
   }
   res.send('Error, wrong validation token');
@@ -75,9 +75,9 @@ function sendMessage(senderId, message) {
   });
 }
 
-app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3002);
-app.set('ip', process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1");
+app.set('port', process.env.PORT || 5000);
+//app.set('ip', process.env.IP || "127.0.0.1");
 
-server.listen(app.get('port'), app.get('ip'), function() {
-  console.log("Chat bot server listening at %s:%d ", app.get('ip'), app.get('port'));
+server.listen(app.get('port'), function() {
+  console.log("Chat bot server listening at %s:%d ", app.get('port'));
 });
