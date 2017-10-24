@@ -84,25 +84,24 @@ app.post('/webhook', function(req, res) {
               var i;
               var __btn =
                 {
-                  "title": "View",
-                  "type": "web_url",
-                  "url": "https://peterssendreceiveapp.ngrok.io/collection",
-                  "messenger_extensions": true,
-                  "webview_height_ratio": "tall",
-                  "fallback_url": "https://peterssendreceiveapp.ngrok.io/"            
+                  type: "web_url",
+                url: "https://www.oculus.com/en-us/rift/",
+                title: "Open Web URL"          
                 }
               for (i in _data){
                 _data[i].title  = _data[i].name;
                 _data[i].subtile = _data[i].name;
-                //_data[i].button = __btn;
+                _data[i].button = __btn;
+                _data[i].item_url = "";
+                _data[i].image_url = "";
                 delete _data[i].id;
                 delete _data[i].name;
                 delete _data[i].latitude;
                 delete _data[i].longitude;
               }
               console.log(_data);
-              sendMessage(senderId, _data);
-              //sendGenericMessage(senderId);
+              //sendMessage(senderId, _data);
+              sendGenericMessage(senderId);
           });
         }
       }
@@ -158,19 +157,8 @@ function sendGenericMessage(recipientId) {
       attachment: {
         type: "template",
         payload: {
-          template_type: "list",
-          top_element_style: "compact",
-          elements: {
-            title: "Classic T-Shirt Collection",
-            subtitle: "See all our colors",
-            image_url: "https://peterssendreceiveapp.ngrok.io/img/collection.png"          
-            },
-          buttons: [
-          {
-            "title": "View More",
-            "type": "postback",
-            "payload": "payload"            
-          }]
+          template_type: "generic",
+          elements: [_data]
         }
       }
     }
